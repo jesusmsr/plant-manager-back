@@ -14,8 +14,10 @@ def login_view(request):
         account = auth.authenticate(email=email, password=password)
         if account is not None:
             data['response'] = '200'
-            data['username'] = account.username
-            data['email'] = account.email
+            data['user'] = {
+                'username': account.username,
+                'email': account.email
+            }
             refresh = RefreshToken.for_user(account)
             data['token'] = {
                 'refresh': str(refresh),
@@ -24,5 +26,5 @@ def login_view(request):
             
             return Response(data, status=status.HTTP_200_OK)
         else:
-            data['error'] = 'bad credentials'
+            data['error'] = 'badCredentials'
             return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

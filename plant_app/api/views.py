@@ -26,11 +26,11 @@ class PlantAV(APIView):
         else:
             if serializer.is_valid() :
                 serializer.save(user=user)
-                imageSerializer = PlantImageSerializer(data=request.data['image'])
-                if imageSerializer.is_valid():
-                    imageSerializer.save(plant=serializer.validated_data)
+                # imageSerializer = PlantImageSerializer(data=request.data['image'])
+                # if imageSerializer.is_valid():
+                #     imageSerializer.save(plant=serializer.validated_data)
                 
-                return Response(imageSerializer.data)
+                return Response(serializer.data)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         

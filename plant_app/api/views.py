@@ -1,3 +1,4 @@
+import re
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from plant_app.api.serializers import PlantSerializer, PlantImageSerializer
@@ -51,8 +52,10 @@ class PlantImageDetailAV(APIView):
     
     def post(self, request, pk):
         plant = Plant.objects.get(pk=pk)
-        file_serializer = PlantImageSerializer(data=request.data)
+        print(request.FILES)
+        file_serializer = PlantImageSerializer(data=request.FILES)
         if file_serializer.is_valid():
+            file_serializer.image = request.FILES['image']
             file_serializer.save(plant=plant)
             print(file_serializer.data)
             return Response(file_serializer.data, status=status.HTTP_201_CREATED)

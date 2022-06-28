@@ -16,7 +16,7 @@ class Plant(models.Model):
     
 class PlantImage(models.Model):
     plant = models.ForeignKey(Plant, on_delete=models.CASCADE, related_name="plantImage")
-    image = models.ImageField(upload_to="images")
+    image = models.FileField(upload_to="images")
     createdAt = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):  

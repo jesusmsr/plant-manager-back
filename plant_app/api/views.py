@@ -50,11 +50,11 @@ class PlantImageDetailAV(APIView):
     parser_class = (FileUploadParser,)
     
     def post(self, request, pk):
-        
+        plant = Plant.objects.get(pk=pk)
         file_serializer = PlantImageSerializer(data=request.data)
-
         if file_serializer.is_valid():
-            file_serializer.save()
+            file_serializer.save(plant=plant)
+            print(file_serializer.data)
             return Response(file_serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response({'error': file_serializer.errors},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': file_serializer.errors},status=status.HTTP_400_BAD_REQUEST)

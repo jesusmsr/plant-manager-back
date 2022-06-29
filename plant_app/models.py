@@ -10,6 +10,7 @@ class Plant(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="userPlant")
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now_add=True)
+    image = models.FileField(upload_to="images", default="/images/default-plant.png")
     
     def __str__(self):
         return self.code

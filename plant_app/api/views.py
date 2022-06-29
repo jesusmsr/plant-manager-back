@@ -40,17 +40,26 @@ class PlantAV(APIView):
     def post(self, request):
         serializer = PlantSerializer(data=request.POST)
         user = self.request.user
-        if Plant.objects.filter(code=request.POST['code']):
-            return Response({'error': 'There is already a plant with that code'}, status=status.HTTP_400_BAD_REQUEST)
+        if Plant.objects.filter(name=request.POST['name']):
+            return Response({'error': 'There is already a plant with that name'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             if serializer.is_valid() :
                 if len(request.FILES) > 0:
                     serializer.save(user=user,image=request.FILES['image'])
                 else:
+                    serializer.validated_data['image'] ='/images/assets/default-plant.png'
                     serializer.save(user=user)
                 return Response(serializer.data)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        try:
+            plant = Plant.objects.get(pk=pk)
+        except (Plant.DoesNotExist):
+            return Response({'error': 'The requested item does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        plant.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class PlantDetailAV(APIView):
     

@@ -10,4 +10,5 @@ urlpatterns = [
     path('<int:pk>/', PlantDetailAV.as_view(), name='plant-detail'),
     path('<int:pk>/add-image/', PlantImageDetailAV.as_view(), name='plant-add-image'),
     path('<int:pk>/update/', PlantAV.as_view(), name='plant-update'),
+    path('<int:pk>/delete/', PlantAV.as_view(), name='plant-delete'),
 ]

@@ -14,10 +14,10 @@ class PlantAV(APIView):
     
     def get(self, request):
         if self.request.user.is_staff:
-            bookings = Plant.objects.all()
+            plants = Plant.objects.all()
         else:
-            bookings = Plant.objects.filter(user=self.request.user)
-        serializer = PlantSerializer(bookings, many=True, context={'request': request})
+            plants = Plant.objects.filter(user=self.request.user)
+        serializer = PlantSerializer(plants, many=True, context={'request': request})
         return Response(serializer.data)
     
     def post(self, request):

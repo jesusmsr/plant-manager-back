@@ -9,7 +9,7 @@ class PlantImageSerializer(serializers.ModelSerializer):
         
 class PlantSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
-    image = PlantImageSerializer(read_only=True)
+    plantImage = PlantImageSerializer(many=True,read_only=True)
     class Meta:
         model = Plant
         fields = '__all__'

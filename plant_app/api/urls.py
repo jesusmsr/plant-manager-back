@@ -8,5 +8,6 @@ urlpatterns = [
     path('list/', PlantAV.as_view(), name='plant-list'),
     path('create/', PlantAV.as_view(), name='plant-create'),
     path('<int:pk>/', PlantDetailAV.as_view(), name='plant-detail'),
-    path('<int:pk>/add-image/', PlantImageDetailAV.as_view(), name='plant-detail'),
+    path('<int:pk>/add-image/', PlantImageDetailAV.as_view(), name='plant-add-image'),
+    path('<int:pk>/update/', PlantAV.as_view(), name='plant-update'),
 ]

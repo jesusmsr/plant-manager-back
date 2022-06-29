@@ -20,8 +20,24 @@ class PlantAV(APIView):
         serializer = PlantSerializer(plants, many=True, context={'request': request})
         return Response(serializer.data)
     
+    def put(self, request, pk):
+        
+        user = self.request.user
+        # if Plant.objects.filter(code=request.POST['code']):
+        #     return Response({'error': 'There is already a plant with that code'}, status=status.HTTP_400_BAD_REQUEST)
+        # else:
+        plant = Plant.objects.get(pk=pk)
+        serializer = PlantSerializer(plant,data=request.data)
+        if serializer.is_valid() :
+            if len(request.FILES) > 0:
+                serializer.save(user=user,image=request.FILES['image'])
+            else:
+                serializer.save(user=user)
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
     def post(self, request):
-        parser_class = (FileUploadParser,)
         serializer = PlantSerializer(data=request.POST)
         user = self.request.user
         if Plant.objects.filter(code=request.POST['code']):

@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from plant_app.models import Plant
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser
-
+import json
 
 class PlantAV(APIView):
     permission_classes = [IsAuthenticated]
@@ -21,17 +21,17 @@ class PlantAV(APIView):
         return Response(serializer.data)
     
     def post(self, request):
-        serializer = PlantSerializer(data=request.data)
+        parser_class = (FileUploadParser,)
+        serializer = PlantSerializer(data=request.POST)
         user = self.request.user
-        if Plant.objects.filter(code=request.data['code']):
+        if Plant.objects.filter(code=request.POST['code']):
             return Response({'error': 'There is already a plant with that code'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             if serializer.is_valid() :
-                serializer.save(user=user)
-                # imageSerializer = PlantImageSerializer(data=request.data['image'])
-                # if imageSerializer.is_valid():
-                #     imageSerializer.save(plant=serializer.validated_data)
-                
+                if len(request.FILES) > 0:
+                    serializer.save(user=user,image=request.FILES['image'])
+                else:
+                    serializer.save(user=user)
                 return Response(serializer.data)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -52,12 +52,10 @@ class PlantImageDetailAV(APIView):
     
     def post(self, request, pk):
         plant = Plant.objects.get(pk=pk)
-        print(request.FILES)
         file_serializer = PlantImageSerializer(data=request.FILES)
         if file_serializer.is_valid():
             file_serializer.image = request.FILES['image']
             file_serializer.save(plant=plant)
-            print(file_serializer.data)
             return Response(file_serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response({'error': file_serializer.errors},status=status.HTTP_400_BAD_REQUEST)
